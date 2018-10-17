@@ -4,6 +4,8 @@
 #include "stdafx.h"
 #include <WinSock2.h>
 
+#define BUF_SIZE 1024
+
 void ErrorHandling(char* message)
 {
 	fputs(message, stderr);
@@ -41,18 +43,32 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		ErrorHandling("connect() error");
 	}
-
-	char message[30];
-	int strLen = recv(hSocket, message, sizeof(message) - 1, 0);
-	if (strLen == -1)
 	{
-		ErrorHandling("recv() error");
+		puts("Conected......");
 	}
-	printf("MEssage from server: %s \n", message);
+
+	char message[BUF_SIZE];
+	int strLen(0);
+	while (1)
+	{
+		fputs("Input message(Q to quit): ", stdout);
+		fgets(message, BUF_SIZE, stdin);
+
+		if (!strcmp(message, "q\n"))
+		{
+			break;
+		}
+
+
+
+		send(hSocket, message, strlen(message), 0);
+		strLen = recv(hSocket, message, BUF_SIZE - 1, 0);
+		message[strLen] = 0;
+		printf("message from server: %s \n", message);
+	}
 
 	closesocket(hSocket);
 	WSACleanup();
-
 
 	return 0;
 }

@@ -4,6 +4,8 @@
 #include "stdafx.h"
 #include <WinSock2.h>
 
+#define BUF_SIZE 1024
+
 void ErrorHandling(char* message)
 {
 	fputs(message, stderr);
@@ -13,8 +15,6 @@ void ErrorHandling(char* message)
 
 int _tmain(int argc, char* argv[])
 {
-	
-	
 	if (argc != 2)
 	{
 		printf("Usage: %s <port>\n", argv[0]);
@@ -36,6 +36,7 @@ int _tmain(int argc, char* argv[])
 	SOCKADDR_IN servAddr;
 	memset(&servAddr, 0, sizeof(servAddr));
 	servAddr.sin_family = AF_INET;
+
 	servAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	servAddr.sin_port = htons(atoi(argv[1]));
 
@@ -49,17 +50,32 @@ int _tmain(int argc, char* argv[])
 		ErrorHandling("listen() error");
 	}
 
+	SOCKET hClntSock;
 	SOCKADDR_IN clntAddr;
 	int szClntAddr = sizeof(clntAddr);
-	SOCKET hClntSock = accept(hServSock, (SOCKADDR*)&clntAddr, &szClntAddr);
-	if (hClntSock == INVALID_SOCKET)
+	int strLen = 0;
+	char message[BUF_SIZE] = {0};
+	for (int i = 0; i < 5; ++i)
 	{
-		ErrorHandling("accept() error");
+		hClntSock = accept(hServSock, (SOCKADDR*)&clntAddr, &szClntAddr);
+		if (INVALID_SOCKET == hClntSock)
+		{
+			ErrorHandling("accept() error");
+		}
+		else
+		{
+			printf("Connected client %d \n", i + 1);
+		}
+
+		while ((strLen = recv(hClntSock, message, BUF_SIZE, 0)) != 0)
+		{
+			send(hClntSock, message, strLen, 0);
+		}
+
+		closesocket(hClntSock);
 	}
-	char message[] = "Hello World";
-	send(hClntSock, message, sizeof(message), 0);
+	
 	closesocket(hServSock);
-	closesocket(hClntSock);
 	WSACleanup();
 	return 0;
 }
