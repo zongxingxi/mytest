@@ -4,7 +4,14 @@
 #include "stdafx.h"
 #include <WinSock2.h>
 
-#define BUF_SIZE 1024
+#define BUF_SIZE 100
+#define NAME_SIZE 20
+
+unsigned WINAPI SendMsg(void* arg);
+unsigned WINAPI RecvMsg(void* arg);
+
+char name[NAME_SIZE] = "[DEFUALT]";
+char msg[BUF_SIZE] = {0};
 
 void ErrorHandling(char* message)
 {
@@ -15,9 +22,11 @@ void ErrorHandling(char* message)
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	if (argc != 3)
+	HANDLE hSndThread, hRcvThread;
+
+	if (argc != 4)
 	{
-		printf("Usage : %s <IP><port>\n", argv[0]);
+		printf("Usage : %s <IP><port> <name>\n", argv[0]);
 		exit(1);
 	}
 
@@ -26,6 +35,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		ErrorHandling("WSAStartup() error");
 	}
+
+	sprintf(name, "[%s]", argv[3]);
 
 	SOCKET hSocket = socket(PF_INET, SOCK_STREAM, 0);
 	if (hSocket == INVALID_SOCKET)
@@ -47,25 +58,11 @@ int _tmain(int argc, _TCHAR* argv[])
 		puts("Conected......");
 	}
 
-	char message[BUF_SIZE];
-	int strLen(0);
-	while (1)
-	{
-		fputs("Input message(Q to quit): ", stdout);
-		fgets(message, BUF_SIZE, stdin);
+	hSndThread = (HANDLE)_beginthreadex(NULL, 0, SendMsg, (void*)&hSocket, 0, NULL);
+	hRcvThread = (HANDLE)_beginthreadex(NULL, 0, RecvMsg, (void*)&hSocket, 0, NULL);
 
-		if (!strcmp(message, "q\n"))
-		{
-			break;
-		}
-
-
-
-		send(hSocket, message, strlen(message), 0);
-		strLen = recv(hSocket, message, BUF_SIZE - 1, 0);
-		message[strLen] = 0;
-		printf("message from server: %s \n", message);
-	}
+	WaitForSingleObject(hSndThread, INFINITE);
+	WaitForSingleObject(hRcvThread, INFINITE)
 
 	closesocket(hSocket);
 	WSACleanup();
@@ -73,3 +70,17 @@ int _tmain(int argc, _TCHAR* argv[])
 	return 0;
 }
 
+unsigned WINAPI SendMsg(void* arg)
+{
+	SOCKET hSock = *((SOCKET*)arg);
+	char nameMsg[NAME_SIZE + BUF_SIZE];
+	while(1)
+	{
+		fgets(MSG, BUF_SIZE, stdin);
+		if (!strcmp(msg, "q\n") || !strcmp(msg, "Q\n"))
+		{
+			closesocket(hSock);
+			exit(0);
+		}
+	}
+}

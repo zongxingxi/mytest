@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "broadcast_sender", "broadas
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "broadcast_receiver", "broadcast_receiver\broadcast_receiver.vcxproj", "{2B2D5DEA-8963-4EE7-AE14-43884EE5D459}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "maskrule", "maskrule\maskrule.vcxproj", "{6803B933-C849-4F3F-B3F9-73330CC71C5F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -61,6 +63,10 @@ Global
 		{2B2D5DEA-8963-4EE7-AE14-43884EE5D459}.Debug|Win32.Build.0 = Debug|Win32
 		{2B2D5DEA-8963-4EE7-AE14-43884EE5D459}.Release|Win32.ActiveCfg = Release|Win32
 		{2B2D5DEA-8963-4EE7-AE14-43884EE5D459}.Release|Win32.Build.0 = Release|Win32
+		{6803B933-C849-4F3F-B3F9-73330CC71C5F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6803B933-C849-4F3F-B3F9-73330CC71C5F}.Debug|Win32.Build.0 = Debug|Win32
+		{6803B933-C849-4F3F-B3F9-73330CC71C5F}.Release|Win32.ActiveCfg = Release|Win32
+		{6803B933-C849-4F3F-B3F9-73330CC71C5F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
