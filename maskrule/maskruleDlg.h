@@ -38,4 +38,5 @@ public:
 	CDialog* pDialog[2];
 	int m_CurSelTab;
 	afx_msg void OnSelchangeTab1(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnBnClickedOk();
 };
